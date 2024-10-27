@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Namespace HHUIToolkit.Core.VisualEffect
+ | HelloHolo UI Toolkit Documentation </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Namespace HHUIToolkit.Core.VisualEffect
+ | HelloHolo UI Toolkit Documentation ">
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="HHUIToolkit.Core.VisualEffect">
+
+  <h1 id="HHUIToolkit_Core_VisualEffect" data-uid="HHUIToolkit.Core.VisualEffect" class="text-break">Namespace HHUIToolkit.Core.VisualEffect
+</h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+    <h3 id="classes">Classes
+</h3>
+      <h4><a class="xref" href="HHUIToolkit.Core.VisualEffect.ActivateVisualEffect.html">ActivateVisualEffect</a></h4>
+      <section></section>
+      <h4><a class="xref" href="HHUIToolkit.Core.VisualEffect.AnimationTriggerVisualEffect.html">AnimationTriggerVisualEffect</a></h4>
+      <section></section>
+      <h4><a class="xref" href="HHUIToolkit.Core.VisualEffect.BaseAnimatedVisualEffect.html">BaseAnimatedVisualEffect</a></h4>
+      <section></section>
+      <h4><a class="xref" href="HHUIToolkit.Core.VisualEffect.BaseVisualEffect.html">BaseVisualEffect</a></h4>
+      <section><p sourcefile="api/HHUIToolkit.Core.VisualEffect.BaseVisualEffect.yml" sourcestartlinenumber="2">Base abstract class for a scriptable object visual effect for interactables. Extend this class to provide additional functionalities to the visual effect.</p>
+</section>
+      <h4><a class="xref" href="HHUIToolkit.Core.VisualEffect.BaseVisualEffectInspector.html">BaseVisualEffectInspector</a></h4>
+      <section></section>
+      <h4><a class="xref" href="HHUIToolkit.Core.VisualEffect.BaseVisualEffectPropertyInspector.html">BaseVisualEffectPropertyInspector</a></h4>
+      <section></section>
+      <h4><a class="xref" href="HHUIToolkit.Core.VisualEffect.ColourVisualEffect.html">ColourVisualEffect</a></h4>
+      <section></section>
+      <h4><a class="xref" href="HHUIToolkit.Core.VisualEffect.PositionVisualEffect.html">PositionVisualEffect</a></h4>
+      <section></section>
+      <h4><a class="xref" href="HHUIToolkit.Core.VisualEffect.RotationVisualEffect.html">RotationVisualEffect</a></h4>
+      <section></section>
+      <h4><a class="xref" href="HHUIToolkit.Core.VisualEffect.ScaleVisualEffect.html">ScaleVisualEffect</a></h4>
+      <section></section>
+      <h4><a class="xref" href="HHUIToolkit.Core.VisualEffect.StatePriorityItemPropertyInspector.html">StatePriorityItemPropertyInspector</a></h4>
+      <section></section>
+      <h4><a class="xref" href="HHUIToolkit.Core.VisualEffect.VisualEffectItem.html">VisualEffectItem</a></h4>
+      <section><p sourcefile="api/HHUIToolkit.Core.VisualEffect.VisualEffectItem.yml" sourcestartlinenumber="2">Effect list item displayed in an interactable.</p>
+</section>
+      <h4><a class="xref" href="HHUIToolkit.Core.VisualEffect.VisualEffectItemPropertyInspector.html">VisualEffectItemPropertyInspector</a></h4>
+      <section></section>
+    <h3 id="structs">Structs
+</h3>
+      <h4><a class="xref" href="HHUIToolkit.Core.VisualEffect.StatePriorityItem.html">StatePriorityItem</a></h4>
+      <section><p sourcefile="api/HHUIToolkit.Core.VisualEffect.StatePriorityItem.yml" sourcestartlinenumber="2">Used to represent an interactable state in the state priority list.</p>
+</section>
+    <h3 id="enums">Enums
+</h3>
+      <h4><a class="xref" href="HHUIToolkit.Core.VisualEffect.ColourVisualEffect.ColourBlendMode.html">ColourVisualEffect.ColourBlendMode</a></h4>
+      <section></section>
+      <h4><a class="xref" href="HHUIToolkit.Core.VisualEffect.InteractableStates.html">InteractableStates</a></h4>
+      <section><p sourcefile="api/HHUIToolkit.Core.VisualEffect.InteractableStates.yml" sourcestartlinenumber="2">The visual effect states that an interactable can have.</p>
+</section>
+      <h4><a class="xref" href="HHUIToolkit.Core.VisualEffect.PositionVisualEffect.TransformMode.html">PositionVisualEffect.TransformMode</a></h4>
+      <section></section>
+      <h4><a class="xref" href="HHUIToolkit.Core.VisualEffect.RotationVisualEffect.TransformMode.html">RotationVisualEffect.TransformMode</a></h4>
+      <section></section>
+      <h4><a class="xref" href="HHUIToolkit.Core.VisualEffect.ScaleVisualEffect.TransformMode.html">ScaleVisualEffect.TransformMode</a></h4>
+      <section></section>
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      HelloHolo UI Toolkit Documentation
+      
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+.hhui-box-border {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-left-color: rgba(0, 0, 0, 0.39);
+    border-right-color: rgba(0, 0, 0, 0.39);
+    border-top-color: rgba(0, 0, 0, 0.39);
+    border-bottom-color: rgba(0, 0, 0, 0.39);
+}
+
+Foldout.hhui-box-border {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-left-color: rgba(0, 0, 0, 0.39);
+    border-right-color: rgba(0, 0, 0, 0.39);
+    border-top-color: rgba(0, 0, 0, 0.39);
+    border-bottom-color: rgba(0, 0, 0, 0.39);
+    padding-top: 2px;
+    padding-right: 8px;
+    padding-bottom: 4px;
+    padding-left: 16px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.hhui-border {
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-left-color: rgba(0, 0, 0, 0.39);
+    border-right-color: rgba(0, 0, 0, 0.39);
+    border-top-color: rgba(0, 0, 0, 0.39);
+    border-bottom-color: rgba(0, 0, 0, 0.39);
+}
+
+.hhui-no-focus-bg .unity-list-view__item:selected {
+    background-color: rgba(0, 0, 0, 0.11);
+}
+
+.hhui-no-focus-bg .unity-list-view__item {
+}

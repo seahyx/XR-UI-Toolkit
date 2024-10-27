@@ -1,0 +1,20 @@
+{
+    "name": "XRUIToolkit.Core.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:fc0c61265dd8f4b1ba78327e2a3cbfaa",
+        "GUID:190979c3ed6e41c448f5e9925429edf9",
+        "GUID:fe685ec1767f73d42b749ea8045bfe43"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

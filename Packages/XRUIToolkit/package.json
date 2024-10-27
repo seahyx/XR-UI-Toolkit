@@ -1,0 +1,27 @@
+{
+  "name": "com.seahyx.xruitoolkit",
+  "version": "1.0.0",
+  "displayName": "XR UI Toolkit",
+  "description": "An convenient UI toolkit for multi-platform XR with examples and scripts to make our lives easier. Uses Unity's XRInteraction package and aims to provide the same convenience as MRTK.",
+  "unity": "2022.3",
+  "documentationUrl": "https://nocode.com/",
+  "changelogUrl": "https://example.com/changelog.html",
+  "licensesUrl": "https://example.com/licensing.html",
+  "dependencies": {
+    "com.unity.xr.interaction.toolkit": "2.5.4"
+  },
+  "keywords": [
+    "XR",
+    "MRTK",
+    "UI",
+    "VR",
+    "MR",
+    "AR",
+    "XRI"
+  ],
+  "author": {
+    "name": "Seah Ying Xiang",
+    "email": "seahyx@gmail.com",
+    "url": "https://seahyx.github.com"
+  }
+}
