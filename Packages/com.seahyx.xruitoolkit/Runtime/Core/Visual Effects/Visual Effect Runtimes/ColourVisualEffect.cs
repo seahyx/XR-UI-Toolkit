@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
 
 namespace XRUIToolkit.Core.VisualEffect
 {
@@ -39,6 +38,10 @@ namespace XRUIToolkit.Core.VisualEffect
 			Tooltip(TOOLTIP_STATE_ACTIVATED)]
 		protected Color activated = Color.white;
 
+		[SerializeField,
+			Tooltip(TOOLTIP_STATE_DISABLED)]
+		protected Color disabled = Color.white;
+
 		private Material _targetMaterial;
 
 		/// <summary>
@@ -59,9 +62,9 @@ namespace XRUIToolkit.Core.VisualEffect
 		/// </summary>
 		protected Color initialColor = Color.white;
 
-		public override void Initialize(XRBaseInteractable interactable, GameObject target)
+		public override void Initialize(BaseVisualEffectsController controller, GameObject target)
 		{
-			base.Initialize(interactable, target);
+			base.Initialize(controller, target);
 
 			Renderer renderer;
 			if (target != null && target.TryGetComponent(out renderer))
@@ -81,7 +84,7 @@ namespace XRUIToolkit.Core.VisualEffect
 
 		protected override void OnChangeState(
 			GameObject target,
-			XRBaseInteractable interactable,
+			BaseVisualEffectsController controller,
 			InteractableStates prevState,
 			InteractableStates currentState)
 		{
@@ -115,6 +118,12 @@ namespace XRUIToolkit.Core.VisualEffect
 					BeginTransitionCoroutine(TransitionAnimation(
 						TargetMaterial.color,
 						BlendColours(initialColor, activated, colourBlendMode)));
+					break;
+
+				case InteractableStates.Disabled:
+					BeginTransitionCoroutine(TransitionAnimation(
+						TargetMaterial.color,
+						BlendColours(initialColor, disabled, colourBlendMode)));
 					break;
 			}
 		}

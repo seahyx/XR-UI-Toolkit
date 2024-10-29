@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
 
 namespace XRUIToolkit.Core.VisualEffect
 {
@@ -26,9 +25,13 @@ namespace XRUIToolkit.Core.VisualEffect
 			Tooltip("Whether the target object will be active in the activated state.")]
 		private bool activated = true;
 
+		[SerializeField,
+			Tooltip("Whether the target object will be active in the disabled state.")]
+		private bool disabled = true;
+
 		protected override void OnChangeState(
 			GameObject target,
-			XRBaseInteractable interactable,
+			BaseVisualEffectsController controller,
 			InteractableStates prevState,
 			InteractableStates currentState)
 		{
@@ -48,6 +51,9 @@ namespace XRUIToolkit.Core.VisualEffect
 					break;
 				case InteractableStates.Activated:
 					target.SetActive(activated);
+					break;
+				case InteractableStates.Disabled:
+					target.SetActive(disabled);
 					break;
 			}
 		}

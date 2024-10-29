@@ -9,9 +9,13 @@ namespace XRUIToolkit.Core.VisualEffect
 	/// XR UI Visual Effect component.
 	/// </summary>
 	[AddComponentMenu("XR UI Toolkit/Visual Effects/XR Visual Effect")]
-	[RequireComponent(typeof(XRVisualEffectsController))]
+	[RequireComponent(typeof(BaseVisualEffectsController))]
 	public class XRVisualEffect : MonoBehaviour
 	{
+		[SerializeField,
+			Tooltip("Whether this effect is running.")]
+		public bool isEnabled = true;
+
 		[SerializeField,
 			Tooltip("GameObject to apply the effect onto.")]
 		public GameObject Target;
@@ -20,9 +24,25 @@ namespace XRUIToolkit.Core.VisualEffect
 			Tooltip("Preset for this effect.")]
 		public BaseVisualEffect Effect;
 
-		[SerializeField,
-			Tooltip("Whether to re-initialize the effect when the controller of this visual effect is disabled.")]
-		public bool ReinitializeOnDisable = false;
+		private bool _enabled = true;
+
+		/// <summary>
+		/// Whether this effect is running. Disabling will reset the effect to its idle state and stop it from updating.
+		/// </summary>
+		public bool Enabled
+		{
+			get => _enabled;
+			set
+			{
+				if (EffectInstance != null && value != _enabled)
+					if (value)
+						EffectInstance.Enable();
+					else
+						EffectInstance.Disable();
+				_enabled = value;
+				isEnabled = value;
+			}
+		}
 
 		/// <summary>
 		/// Effect instance is created during runtime, using <see cref="Effect"/> as the preset.
@@ -104,13 +124,26 @@ namespace XRUIToolkit.Core.VisualEffect
 		/// <br/>
 		/// This will also mean that in play mode, editor changes to the visual effect will not have an immediate effect unless we repeat this process.
 		/// </summary>
-		public void InitializeEffect(XRBaseInteractable interactable)
+		public void InitializeEffect(BaseVisualEffectsController controller)
 		{
 			Destroy(EffectInstance);
 
 			if (Effect == null) return;
 			EffectInstance = Instantiate(Effect);
-			EffectInstance.Initialize(interactable, Target);
+			EffectInstance.Initialize(controller, Target);
 		}
+
+#if UNITY_EDITOR
+
+		/// <summary>
+		/// Update the enabled state (only in editor) from the inspector value.
+		/// </summary>
+		private void Update()
+		{
+			if (isEnabled != Enabled)
+				Enabled = isEnabled;
+		}
+
+#endif
 	}
 }

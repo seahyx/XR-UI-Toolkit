@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   statePriorities:
   - enabled: 1
+    state: 16
+  - enabled: 1
     state: 8
   - enabled: 1
     state: 2
@@ -23,8 +25,10 @@ MonoBehaviour:
     state: 4
   - enabled: 1
     state: 0
+  deactivateOnDeselect: 1
   idle: 0
   hover: 1
   selected: 1
   focused: 1
   activated: 1
+  disabled: 1

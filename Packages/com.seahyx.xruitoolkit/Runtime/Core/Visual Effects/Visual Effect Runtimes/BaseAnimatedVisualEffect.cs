@@ -24,10 +24,11 @@ namespace XRUIToolkit.Core.VisualEffect
 		protected void BeginTransitionCoroutine(IEnumerator transitionCoroutine)
 		{
 			if (transCoroutine != null)
-				Interactable.StopCoroutine(transCoroutine);
-			if (!Interactable.isActiveAndEnabled) return;
+				Controller.StopCoroutine(transCoroutine);
 			transCoroutine = transitionCoroutine;
-			Interactable.StartCoroutine(transitionCoroutine);
+			if (!Controller.isActiveAndEnabled)
+				return;
+			Controller.StartCoroutine(transitionCoroutine);
 		}
 	}
 }

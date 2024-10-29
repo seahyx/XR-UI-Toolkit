@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
 
 namespace XRUIToolkit.Core.VisualEffect
 {
@@ -39,6 +38,10 @@ namespace XRUIToolkit.Core.VisualEffect
 			Tooltip(TOOLTIP_STATE_ACTIVATED)]
 		protected Vector3 activated = Vector3.zero;
 
+		[SerializeField,
+			Tooltip(TOOLTIP_STATE_DISABLED)]
+		protected Vector3 disabled = Vector3.zero;
+
 		private Transform _targetTransform;
 
 		/// <summary>
@@ -59,9 +62,9 @@ namespace XRUIToolkit.Core.VisualEffect
 		/// </summary>
 		protected Quaternion initialRotation = Quaternion.identity;
 
-		public override void Initialize(XRBaseInteractable interactable, GameObject target)
+		public override void Initialize(BaseVisualEffectsController controller, GameObject target)
 		{
-			base.Initialize(interactable, target);
+			base.Initialize(controller, target);
 
 			if (target != null)
 				TargetTransform = target.transform;
@@ -80,7 +83,7 @@ namespace XRUIToolkit.Core.VisualEffect
 
 		protected override void OnChangeState(
 			GameObject target,
-			XRBaseInteractable interactable,
+			BaseVisualEffectsController controller,
 			InteractableStates prevState,
 			InteractableStates currentState)
 		{
@@ -114,6 +117,12 @@ namespace XRUIToolkit.Core.VisualEffect
 					BeginTransitionCoroutine(TransitionAnimation(
 						TargetTransform.rotation,
 						CalculateRotation(initialRotation, activated, transformMode)));
+					break;
+
+				case InteractableStates.Disabled:
+					BeginTransitionCoroutine(TransitionAnimation(
+						TargetTransform.rotation,
+						CalculateRotation(initialRotation, disabled, transformMode)));
 					break;
 			}
 		}

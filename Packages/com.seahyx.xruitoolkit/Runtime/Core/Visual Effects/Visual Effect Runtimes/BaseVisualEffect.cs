@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
 
 namespace XRUIToolkit.Core.VisualEffect
 {
@@ -17,12 +17,16 @@ namespace XRUIToolkit.Core.VisualEffect
 		public const string TOOLTIP_STATE_SELECT = "The state when an interactor is selecting/clicking on this interactable. Similar to a mouse-down state.";
 		public const string TOOLTIP_STATE_FOCUS = "An Interactable is focused when it is selected. This focus persists until another Interactable is selected or the Interactable explicitly attempts to select nothing.";
 		public const string TOOLTIP_STATE_ACTIVATED = "Activation is an extra action, typically mapped to a button or trigger that affects the currently selected object. This lets the user further interact with an object they've selected.";
+		public const string TOOLTIP_STATE_DISABLED = "Disabled state is when the visual effect controller is disabled or invalid.";
+
+		public const string TOOLTIP_DEACTIVATE_ON_DESELECT = "When the interactable is still in the activated state when it exits the selected state, the visual effect will still be stuck in the activated state, until an interactor re-selects the interactable and activates the visual effect again.\nThis flag will allow this visual effect to exit the activated state when the interactable is deselected.";
 
 		#endregion
 
-		[SerializeField]
+		[SerializeField, Tooltip(TOOLTIP_STATE_PRIORITIES)]
 		protected List<StatePriorityItem> statePriorities = new()
 		{
+			new StatePriorityItem(true, InteractableStates.Disabled),
 			new StatePriorityItem(true, InteractableStates.Activated),
 			new StatePriorityItem(true, InteractableStates.Select),
 			new StatePriorityItem(true, InteractableStates.Hover),
@@ -31,24 +35,42 @@ namespace XRUIToolkit.Core.VisualEffect
 		};
 
 		/// <summary>
+		/// Default state priorities list.
+		/// </summary>
+		private static ReadOnlyCollection<StatePriorityItem> defaultStatePriorities = new
+		(
+			new[] {
+				new StatePriorityItem(true, InteractableStates.Disabled),
+				new StatePriorityItem(true, InteractableStates.Activated),
+				new StatePriorityItem(true, InteractableStates.Select),
+				new StatePriorityItem(true, InteractableStates.Hover),
+				new StatePriorityItem(true, InteractableStates.Focus),
+				new StatePriorityItem(true, InteractableStates.Idle),
+			}
+		);
+
+		[SerializeField, Tooltip(TOOLTIP_DEACTIVATE_ON_DESELECT)]
+		protected bool deactivateOnDeselect = true;
+
+		/// <summary>
 		/// The <see cref="GameObject"/> that this effect will apply on.
 		/// </summary>
 		public GameObject Target { get; private set; }
 
 		/// <summary>
-		/// The <see cref="XRBaseInteractable">interactable</see> instance that this effect is attached to.
+		/// The <see cref="BaseVisualEffectsController">controller</see> instance that this effect is attached to.
 		/// </summary>
-		public XRBaseInteractable Interactable { get; private set; }
+		public BaseVisualEffectsController Controller { get; private set; }
 
 		/// <summary>
 		/// Current states.
 		/// </summary>
-		private InteractableStates cStates = InteractableStates.Idle;
+		private InteractableStates currStates = InteractableStates.Idle;
 
 		/// <summary>
 		/// Previous states.
 		/// </summary>
-		private InteractableStates pStates = InteractableStates.Idle;
+		private InteractableStates prevStates = InteractableStates.Idle;
 
 		/// <summary>
 		/// The currently active states of this <see cref="XRBaseInteractable">interactable</see>.
@@ -57,35 +79,24 @@ namespace XRUIToolkit.Core.VisualEffect
 		/// </summary>
 		protected InteractableStates CurrentStates
 		{
-			get => cStates;
+			get => currStates;
 			set
 			{
-				pStates = cStates;
-				cStates = value;
-
-				// If transitioning to idle state from non-idle state
-				if (cStates == InteractableStates.Idle && cStates != pStates)
-				{
-					IdleEntered();
-				}
-				// If transitioning to non-idle state from idle state
-				else if (cStates != InteractableStates.Idle && pStates == InteractableStates.Idle)
-				{
-					IdleExited();
-				}
+				prevStates = currStates;
+				currStates = value;
 
 				// Check if the currently active state has changed
-				if (GetHighestPriorityActiveState(pStates, statePriorities) != GetHighestPriorityActiveState(cStates, statePriorities))
+				if (GetHighestPriorityActiveState(prevStates, statePriorities) != GetHighestPriorityActiveState(currStates, statePriorities))
 				{
 					// Active state has changed, update previous active state and new current active state
 					PreviousActiveState = CurrentActiveState;
-					CurrentActiveState = GetHighestPriorityActiveState(cStates, statePriorities);
+					CurrentActiveState = GetHighestPriorityActiveState(currStates, statePriorities);
 
 					// Validation checks
 					if (!CheckInitialization()) return;
 
 					// Callbacks
-					OnChangeState(Target, Interactable, PreviousActiveState, CurrentActiveState);
+					OnChangeState(Target, Controller, PreviousActiveState, CurrentActiveState);
 				}
 			}
 		}
@@ -117,14 +128,14 @@ namespace XRUIToolkit.Core.VisualEffect
 		/// <br/><br/>
 		/// Extend this method to add additional intialization functionality.
 		/// </summary>
-		/// <param name="interactable">The <see cref="XRBaseInteractable">interactable</see> instance that this effect is attached to.</param>
+		/// <param name="controller">The <see cref="XRBaseInteractable">interactable</see> instance that this effect is attached to.</param>
 		/// <param name="target">The <see cref="GameObject"/> that this effect will apply on.</param>
-		public virtual void Initialize(XRBaseInteractable interactable, GameObject target)
+		public virtual void Initialize(BaseVisualEffectsController controller, GameObject target)
 		{
-			Interactable = interactable;
+			Controller = controller;
 			Target = target;
 
-			BindEventMethods(interactable);
+			BindEventMethods(controller);
 		}
 
 		/// <summary>
@@ -135,9 +146,9 @@ namespace XRUIToolkit.Core.VisualEffect
 		/// <returns>Whether this effect passed the initialization checks.</returns>
 		protected virtual bool CheckInitialization()
 		{
-			if (Interactable == null)
+			if (Controller == null)
 			{
-				PrintInitWarning("Interactable is null. Effect is not yet initialized.");
+				PrintInitWarning("Controller is null. Effect is not yet initialized.");
 				return false;
 			}
 			if (Target == null)
@@ -152,42 +163,74 @@ namespace XRUIToolkit.Core.VisualEffect
 		/// Binds the event methods on this effect to the interactable event callbacks.
 		/// It will first remove existing callbacks on the interactable before binding to prevent duplicate callbacks.
 		/// </summary>
-		/// <param name="interactable">The <see cref="XRBaseInteractable">interactable</see> instance that this effect is attached to.</param>
-		private void BindEventMethods(XRBaseInteractable interactable)
+		/// <param name="controller">The <see cref="XRBaseInteractable">interactable</see> instance that this effect is attached to.</param>
+		private void BindEventMethods(BaseVisualEffectsController controller)
 		{
-			if (interactable == null) return;
+			if (controller == null) return;
 
 			// Remove listeners to prevent duplicate callbacks
-			interactable.firstHoverEntered.RemoveListener(FirstHoverEntered);
-			interactable.lastHoverExited.RemoveListener(LastHoverExited);
-			interactable.hoverEntered.RemoveListener(HoverEntered);
-			interactable.hoverExited.RemoveListener(HoverExited);
-			interactable.firstSelectEntered.RemoveListener(FirstSelectEntered);
-			interactable.lastSelectExited.RemoveListener(LastSelectExited);
-			interactable.selectEntered.RemoveListener(SelectEntered);
-			interactable.selectExited.RemoveListener(SelectExited);
-			interactable.firstFocusEntered.RemoveListener(FirstFocusEntered);
-			interactable.lastFocusExited.RemoveListener(LastFocusExited);
-			interactable.focusEntered.RemoveListener(FocusEntered);
-			interactable.focusExited.RemoveListener(FocusExited);
-			interactable.activated.RemoveListener(Activated);
-			interactable.deactivated.RemoveListener(Deactivated);
+			UnbindEventMethods(controller);
 
 			// Add listeners
-			interactable.firstHoverEntered.AddListener(FirstHoverEntered);
-			interactable.lastHoverExited.AddListener(LastHoverExited);
-			interactable.hoverEntered.AddListener(HoverEntered);
-			interactable.hoverExited.AddListener(HoverExited);
-			interactable.firstSelectEntered.AddListener(FirstSelectEntered);
-			interactable.lastSelectExited.AddListener(LastSelectExited);
-			interactable.selectEntered.AddListener(SelectEntered);
-			interactable.selectExited.AddListener(SelectExited);
-			interactable.firstFocusEntered.AddListener(FirstFocusEntered);
-			interactable.lastFocusExited.AddListener(LastFocusExited);
-			interactable.focusEntered.AddListener(FocusEntered);
-			interactable.focusExited.AddListener(FocusExited);
-			interactable.activated.AddListener(Activated);
-			interactable.deactivated.AddListener(Deactivated);
+			controller.FirstHoverEntered.AddListener(FirstHoverEntered);
+			controller.LastHoverExited.AddListener(LastHoverExited);
+			controller.FirstSelectEntered.AddListener(FirstSelectEntered);
+			controller.LastSelectExited.AddListener(LastSelectExited);
+			controller.FirstFocusEntered.AddListener(FirstFocusEntered);
+			controller.LastFocusExited.AddListener(LastFocusExited);
+			controller.Activated.AddListener(Activated);
+			controller.Deactivated.AddListener(Deactivated);
+			controller.ControllerEnabled.AddListener(ControllerEnabled);
+			controller.ControllerDisabled.AddListener(ControllerDisabled);
+		}
+
+		/// <summary>
+		/// Unbinds the event methods on this effect from the interactable event callbacks.
+		/// </summary>
+		/// <param name="controller"></param>
+		private void UnbindEventMethods(BaseVisualEffectsController controller)
+		{
+			if (controller == null) return;
+
+			// Remove listeners
+			controller.FirstHoverEntered.RemoveListener(FirstHoverEntered);
+			controller.LastHoverExited.RemoveListener(LastHoverExited);
+			controller.FirstSelectEntered.RemoveListener(FirstSelectEntered);
+			controller.LastSelectExited.RemoveListener(LastSelectExited);
+			controller.FirstFocusEntered.RemoveListener(FirstFocusEntered);
+			controller.LastFocusExited.RemoveListener(LastFocusExited);
+			controller.Activated.RemoveListener(Activated);
+			controller.Deactivated.RemoveListener(Deactivated);
+			controller.ControllerEnabled.RemoveListener(ControllerEnabled);
+			controller.ControllerDisabled.RemoveListener(ControllerDisabled);
+		}
+
+		#endregion
+
+		#region Lifecycle Methods
+
+		/// <summary>
+		/// Disable this effect. Sets the visual effect to idle state.
+		/// </summary>
+		public void Disable()
+		{
+			// Enables disabled state
+			CurrentStates |= InteractableStates.EffectDisabled;
+
+			// Invoke callbacks for further cleanup
+			OnEffectDisable();
+		}
+
+		/// <summary>
+		/// Enables this effect.
+		/// </summary>
+		public void Enable()
+		{
+			// Disables disabled state
+			CurrentStates &= ~InteractableStates.EffectDisabled;
+
+			// Invoke callbacks for further initialization
+			OnEffectEnable();
 		}
 
 		#endregion
@@ -204,6 +247,9 @@ namespace XRUIToolkit.Core.VisualEffect
 		/// <returns>The single highest priority active state among all active states.</returns>
 		public static InteractableStates GetHighestPriorityActiveState(InteractableStates states, List<StatePriorityItem> statePriorities)
 		{
+			// If effect disabled state is active, return the idle state (effect disabled state has the highest priority)
+			if (states.HasFlag(InteractableStates.EffectDisabled))
+				return InteractableStates.Idle;
 			// Index 0 = highest priority, check from highest priority to lowest
 			for (int i = 0; i < statePriorities.Count; i++)
 			{
@@ -260,128 +306,98 @@ namespace XRUIToolkit.Core.VisualEffect
 		/// <returns>Formatted debug message.</returns>
 		protected string FormatDebugMessage(string message) => $"[{GetType().Name}] {name}: {message}";
 
+		public void ResetStatePriorities()
+		{
+			statePriorities = new List<StatePriorityItem>(defaultStatePriorities);
+		}
+
 		#endregion
 
 		#region Binding Event Method Wrappers
-		// These methods are called by the parent interactable instance
+		// These methods are called by the controller instance
 		// as wrappers for the virtual event methods
 
 		/// <summary>
-		/// Base event method called whenever <see cref="CurrentStates"/> becomes <see cref="InteractableStates.Idle"/>.
+		/// Base event method called by the controller.
 		/// </summary>
-		protected void IdleEntered() { }
-
-		/// <summary>
-		/// Base event method called whenever <see cref="CurrentStates"/> becomes anything other than <see cref="InteractableStates.Idle"/>.
-		/// </summary>
-		protected void IdleExited() { }
-
-		/// <summary>
-		/// Base event method called by the interactable.
-		/// </summary>
-		/// <param name="e">Contains information about the interaction event.</param>
-		protected void FirstHoverEntered(HoverEnterEventArgs e)
+		protected void FirstHoverEntered()
 		{
 			CurrentStates |= InteractableStates.Hover; // Set flag
 		}
 
 		/// <summary>
-		/// Base event method called by the interactable.
+		/// Base event method called by the controller.
 		/// </summary>
-		/// <param name="e">Contains information about the interaction event.</param>
-		protected void LastHoverExited(HoverExitEventArgs e)
+		protected void LastHoverExited()
 		{
 			CurrentStates &= ~InteractableStates.Hover; // Clear flag
 		}
 
 		/// <summary>
-		/// Base event method called by the interactable.
+		/// Base event method called by the controller.
 		/// </summary>
-		/// <param name="e">Contains information about the interaction event.</param>
-		protected void HoverEntered(HoverEnterEventArgs e) { }
-
-		/// <summary>
-		/// Base event method called by the interactable.
-		/// </summary>
-		/// <param name="e">Contains information about the interaction event.</param>
-		protected void HoverExited(HoverExitEventArgs e) { }
-
-		/// <summary>
-		/// Base event method called by the interactable.
-		/// </summary>
-		/// <param name="e">Contains information about the interaction event.</param>
-		protected void FirstSelectEntered(SelectEnterEventArgs e)
+		protected void FirstSelectEntered()
 		{
 			CurrentStates |= InteractableStates.Select; // Set flag
 		}
 
 		/// <summary>
-		/// Base event method called by the interactable.
+		/// Base event method called by the controller.
 		/// </summary>
-		/// <param name="e">Contains information about the interaction event.</param>
-		protected void LastSelectExited(SelectExitEventArgs e)
+		protected void LastSelectExited()
 		{
 			CurrentStates &= ~InteractableStates.Select; // Clear flag
+
+			if (deactivateOnDeselect)
+				CurrentStates &= ~InteractableStates.Activated; // Clear flag
 		}
 
 		/// <summary>
-		/// Base event method called by the interactable.
+		/// Base event method called by the controller.
 		/// </summary>
-		/// <param name="e">Contains information about the interaction event.</param>
-		protected void SelectEntered(SelectEnterEventArgs e) { }
-
-		/// <summary>
-		/// Base event method called by the interactable.
-		/// </summary>
-		/// <param name="e">Contains information about the interaction event.</param>
-		protected void SelectExited(SelectExitEventArgs e) { }
-
-		/// <summary>
-		/// Base event method called by the interactable.
-		/// </summary>
-		/// <param name="e">Contains information about the interaction event.</param>
-		protected void FirstFocusEntered(FocusEnterEventArgs e)
+		protected void FirstFocusEntered()
 		{
 			CurrentStates |= InteractableStates.Focus; // Set flag
 		}
 
 		/// <summary>
-		/// Base event method called by the interactable.
+		/// Base event method called by the controller.
 		/// </summary>
-		/// <param name="e">Contains information about the interaction event.</param>
-		protected void LastFocusExited(FocusExitEventArgs e)
+		protected void LastFocusExited()
 		{
 			CurrentStates &= ~InteractableStates.Focus; // Clear flag
 		}
 
 		/// <summary>
-		/// Base event method called by the interactable.
+		/// Base event method called by the controller.
 		/// </summary>
-		/// <param name="e">Contains information about the interaction event.</param>
-		protected void FocusEntered(FocusEnterEventArgs e) { }
-
-		/// <summary>
-		/// Base event method called by the interactable.
-		/// </summary>
-		/// <param name="e">Contains information about the interaction event.</param>
-		protected void FocusExited(FocusExitEventArgs e) { }
-
-		/// <summary>
-		/// Base event method called by the interactable.
-		/// </summary>
-		/// <param name="e">Contains information about the interaction event.</param>
-		protected void Activated(ActivateEventArgs e)
+		protected void Activated()
 		{
 			CurrentStates |= InteractableStates.Activated; // Set flag
 		}
 
 		/// <summary>
-		/// Base event method called by the interactable.
+		/// Base event method called by the controller.
 		/// </summary>
-		/// <param name="e">Contains information about the interaction event.</param>
-		protected void Deactivated(DeactivateEventArgs e)
+		protected void Deactivated()
 		{
 			CurrentStates &= ~InteractableStates.Activated; // Clear flag
+		}
+
+		/// <summary>
+		/// Base event method called by the controller.
+		/// </summary>
+		protected void ControllerEnabled()
+		{
+			CurrentStates &= ~InteractableStates.Disabled; // Clear flag
+		}
+
+		/// <summary>
+		/// Base event method called by the controller.
+		/// </summary>
+		protected void ControllerDisabled()
+		{
+			CurrentStates |= InteractableStates.Disabled; // Set flag
 		}
 
 		#endregion
@@ -395,7 +411,17 @@ namespace XRUIToolkit.Core.VisualEffect
 		/// </summary>
 		/// <param name="prevState">Previous active state. Only has a single state value.</param>
 		/// <param name="currentState">Current active state. Only has a single state value.</param>
-		protected virtual void OnChangeState(GameObject target, XRBaseInteractable interactable, InteractableStates prevState, InteractableStates currentState) { }
+		protected virtual void OnChangeState(GameObject target, BaseVisualEffectsController controller, InteractableStates prevState, InteractableStates currentState) { }
+
+		/// <summary>
+		/// Perform any cleanups when the interactable is disabled if necessary.
+		/// </summary>
+		protected virtual void OnEffectDisable() { }
+
+		/// <summary>
+		/// Perform any initializations when the interactable is enabled. This callback is invoked after the initialization step.
+		/// </summary>
+		protected virtual void OnEffectEnable() { }
 
 		#endregion
 

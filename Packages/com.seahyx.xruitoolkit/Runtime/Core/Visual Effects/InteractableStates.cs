@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 
 namespace XRUIToolkit.Core.VisualEffect
 {
@@ -14,5 +13,7 @@ namespace XRUIToolkit.Core.VisualEffect
 		Select = 1 << 1,
 		Focus = 1 << 2,
 		Activated = 1 << 3,
+		Disabled = 1 << 4,
+		EffectDisabled = 1 << 5,
 	}
 }

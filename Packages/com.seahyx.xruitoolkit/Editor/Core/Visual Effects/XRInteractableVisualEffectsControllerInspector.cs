@@ -7,8 +7,8 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 namespace XRUIToolkit.Core.VisualEffect
 {
-	[CustomEditor(typeof(XRVisualEffectsController), true), CanEditMultipleObjects]
-	public class XRVisualEffectsControllerInspector : Editor
+	[CustomEditor(typeof(XRInteractableVisualEffectsController)), CanEditMultipleObjects]
+	public class XRInteractableVisualEffectsControllerInspector : Editor
 	{
 		public override VisualElement CreateInspectorGUI()
 		{
@@ -16,7 +16,7 @@ namespace XRUIToolkit.Core.VisualEffect
 			VisualElement root = new();
 
 			// Get interactable property
-			SerializedProperty interactableProp = serializedObject.FindProperty("interactable");
+			SerializedProperty interactableProp = serializedObject.FindProperty("Interactable");
 			PropertyField interactableField = new(interactableProp);
 			root.Add(interactableField);
 
@@ -27,15 +27,13 @@ namespace XRUIToolkit.Core.VisualEffect
 			Button addInteractableButton = new(() =>
 			{
 				// Add XRBaseInteractable to each GameObject that does not have one
-				foreach (XRVisualEffectsController target in targets)
+				foreach (XRInteractableVisualEffectsController target in targets)
 				{
 					SerializedObject serTarget = new(target);
 					SerializedProperty serTargetInteractableProp = serTarget.FindProperty(interactableProp.propertyPath);
 					if (serTargetInteractableProp.objectReferenceValue == null && target.GetComponent<XRBaseInteractable>() == null)
 						Undo.AddComponent<XRSimpleInteractable>(target.gameObject);
 				}
-				// Refresh the UI
-				//CreateInspectorGUI();
 			});
 			addInteractableButton.text = "Add XRSimpleInteractable";
 			interactableWarningGroup.Add(addInteractableButton);
@@ -52,7 +50,7 @@ namespace XRUIToolkit.Core.VisualEffect
 			// Show XR Visual Effects list
 
 			// Get list of visual effect components
-			XRVisualEffectsController controller = target as XRVisualEffectsController;
+			XRInteractableVisualEffectsController controller = target as XRInteractableVisualEffectsController;
 			List<XRVisualEffect> visualEffects = new(controller.GetComponents<XRVisualEffect>());
 
 			// Create MultiColumnListView
@@ -65,20 +63,32 @@ namespace XRUIToolkit.Core.VisualEffect
 			xrMultiListView.itemsSource = visualEffects;
 			xrMultiListView.columns.Add(new Column { name = "target", title = "Target", width = Length.Percent(100)});
 			xrMultiListView.columns.Add(new Column { name = "type", title = "Type", width = 160 });
-			xrMultiListView.columns.Add(new Column { name = "actions", title = "Actions", width = 80 });
+			xrMultiListView.columns.Add(new Column { name = "actions", title = "Actions", width = 140 });
 
 			// Create column cell
 			xrMultiListView.columns["target"].makeCell = MakeLabel;
 			xrMultiListView.columns["type"].makeCell = MakeLabel;
-			xrMultiListView.columns["actions"].makeCell = () => new Button() { text = "Remove" };
+			xrMultiListView.columns["actions"].makeCell = () =>
+			{
+				VisualElement cell = new();
+				cell.style.flexDirection = FlexDirection.Row;
+				cell.Add(new Button() { name = "reset", text = "Reset" });
+				cell.Add(new Button() { name = "remove", text = "Remove" });
+				return cell;
+			};
 
 			// For each column cell, create binding function
 			xrMultiListView.columns["target"].bindCell = (e, i) => (e as Label).text = visualEffects[i].RichTargetName;
 			xrMultiListView.columns["type"].bindCell = (e, i) => (e as Label).text = visualEffects[i].RichEffectName;
 			xrMultiListView.columns["actions"].bindCell = (e, i) =>
 			{
-				Button button = e as Button;
-				button.clicked += () => Undo.DestroyObjectImmediate(visualEffects[i]);
+				Button resetBtn = e.Q("reset") as Button;
+				resetBtn.tooltip = "Re-initialize the visual effect during runtime.";
+				resetBtn.clicked += () => visualEffects[i].InitializeEffect(controller);
+				resetBtn.SetEnabled(Application.isPlaying);
+				Button removeBtn = e.Q("remove") as Button;
+				removeBtn.tooltip = "Deletes the visual effect component.";
+				removeBtn.clicked += () => Undo.DestroyObjectImmediate(visualEffects[i]);
 			};
 
 			// Create foldout
@@ -92,6 +102,7 @@ namespace XRUIToolkit.Core.VisualEffect
 			// Add refresh button to foldout
 			Button refreshButton = new(xrMultiListView.RefreshItems);
 			refreshButton.text = "Refresh List";
+			refreshButton.tooltip = "Refresh the list of visual effects.";
 			refreshButton.style.flexGrow = 0;
 			foldoutButtons.Add(refreshButton);
 
@@ -102,11 +113,11 @@ namespace XRUIToolkit.Core.VisualEffect
 			// Button to add new visual effect
 			Button addNewEffectButton = new(() => Undo.AddComponent<XRVisualEffect>(controller.gameObject));
 			addNewEffectButton.text = "Add New Visual Effect";
+			addNewEffectButton.tooltip = "Add a new Visual Effect component to this GameObject.";
 			root.Add(addNewEffectButton);
 
 			return root;
 		}
-
 
 		/// <summary>
 		/// Checks whether to show the warning label.
@@ -117,7 +128,7 @@ namespace XRUIToolkit.Core.VisualEffect
 		private bool ShowWarning(SerializedProperty interactableProp)
 		{
 			bool showWarning = false;
-			foreach (XRVisualEffectsController target in targets)
+			foreach (XRInteractableVisualEffectsController target in targets)
 			{
 				SerializedObject serTarget = new(target);
 				SerializedProperty serTargetInteractableProp = serTarget.FindProperty(interactableProp.propertyPath);

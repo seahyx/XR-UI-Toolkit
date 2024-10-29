@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   statePriorities:
   - enabled: 1
+    state: 16
+  - enabled: 1
     state: 8
   - enabled: 1
     state: 2
@@ -23,6 +25,7 @@ MonoBehaviour:
     state: 4
   - enabled: 1
     state: 0
+  deactivateOnDeselect: 1
   transitionCurve:
     serializedVersion: 2
     m_Curve:
@@ -54,3 +57,4 @@ MonoBehaviour:
   selected: {x: 0.9, y: 0.9, z: 0.9}
   focused: {x: 1, y: 1, z: 1}
   activated: {x: 1, y: 1, z: 1}
+  disabled: {x: 1, y: 1, z: 1}

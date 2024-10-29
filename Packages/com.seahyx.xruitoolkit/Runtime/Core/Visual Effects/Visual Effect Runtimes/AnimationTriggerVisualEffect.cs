@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
 
 namespace XRUIToolkit.Core.VisualEffect
 {
@@ -26,11 +25,15 @@ namespace XRUIToolkit.Core.VisualEffect
 			Tooltip("Animation trigger to be activated when entering the activated state.")]
 		private string activated = "";
 
+		[SerializeField,
+			Tooltip("Animation trigger to be activated when entering the disabled state.")]
+		private string disabled = "";
+
 		private Animator targetAnimator;
 
-		public override void Initialize(XRBaseInteractable interactable, GameObject target)
+		public override void Initialize(BaseVisualEffectsController controller, GameObject target)
 		{
-			base.Initialize(interactable, target);
+			base.Initialize(controller, target);
 
 			Animator animator;
 			if (target != null && target.TryGetComponent(out animator))
@@ -50,7 +53,7 @@ namespace XRUIToolkit.Core.VisualEffect
 
 		protected override void OnChangeState(
 			GameObject target,
-			XRBaseInteractable interactable,
+			BaseVisualEffectsController controller,
 			InteractableStates prevState,
 			InteractableStates currentState)
 		{
@@ -70,6 +73,9 @@ namespace XRUIToolkit.Core.VisualEffect
 					break;
 				case InteractableStates.Activated:
 					targetAnimator.SetTrigger(activated);
+					break;
+				case InteractableStates.Disabled:
+					targetAnimator.SetTrigger(disabled);
 					break;
 			}
 		}

@@ -27,6 +27,11 @@ namespace XRUIToolkit.Core.VisualEffect
 			titleLabel.style.paddingBottom = 4;
 			root.Add(titleLabel);
 
+			// Add enabled toggle
+			SerializedProperty enabledProp = serializedObject.FindProperty("isEnabled");
+			PropertyField enabledField = new(enabledProp);
+			root.Add(enabledField);
+
 			// Add foldout for everything else
 			Foldout foldout = new();
 			foldout.text = "Settings";

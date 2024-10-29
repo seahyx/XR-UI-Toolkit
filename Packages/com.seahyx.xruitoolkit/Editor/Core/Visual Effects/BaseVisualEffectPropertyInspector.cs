@@ -64,57 +64,90 @@ namespace XRUIToolkit.Core.VisualEffect
 
 		public static void DrawProperties(SerializedObject effectPresetReference, VisualElement container)
 		{
+			SerializedProperty statePrioritiesProp = effectPresetReference.FindProperty("statePriorities");
+			SerializedProperty deactivateDeselectProp = effectPresetReference.FindProperty("deactivateOnDeselect");
+
+			// Manually style the state priority listview
+			// Style the foldout
+			Foldout priorityListFoldout = new();
+			priorityListFoldout.text = statePrioritiesProp.displayName;
+			priorityListFoldout.tooltip = BaseVisualEffect.TOOLTIP_STATE_PRIORITIES;
+			priorityListFoldout.style.marginLeft = 12;
+			priorityListFoldout.style.marginRight = 8;
+			priorityListFoldout.style.marginBottom = 4;
+			priorityListFoldout.contentContainer.style.marginLeft = 4;
+			priorityListFoldout.contentContainer.AddToClassList("hhui-border");
+			priorityListFoldout.viewDataKey = "PriorityListFoldout";
+
+			// Highest priority label
+			Label labelHighPriority = new("<b>Highest Priority</b>");
+			labelHighPriority.style.paddingTop = 4;
+			labelHighPriority.style.paddingBottom = 4;
+			labelHighPriority.style.unityTextAlign = TextAnchor.MiddleCenter;
+			labelHighPriority.style.backgroundColor = new Color(0, 0, 0, 0.1f);
+			priorityListFoldout.Add(labelHighPriority);
+
+			// Actual list
+			ListView statePriorityList = new();
+			statePriorityList.virtualizationMethod = CollectionVirtualizationMethod.DynamicHeight;
+			statePriorityList.reorderable = true;
+			statePriorityList.showAddRemoveFooter = false;
+			statePriorityList.reorderMode = ListViewReorderMode.Animated;
+			statePriorityList.showBoundCollectionSize = false;
+
+			statePriorityList.BindProperty(statePrioritiesProp);
+			statePriorityList.Bind(effectPresetReference);
+
+			priorityListFoldout.Add(statePriorityList);
+
+			// Lowest priority label
+			Label labelLowPriority = new("<b>Lowest Priority</b>");
+			labelLowPriority.style.paddingTop = 4;
+			labelLowPriority.style.paddingBottom = 4;
+			labelLowPriority.style.unityTextAlign = TextAnchor.MiddleCenter;
+			labelLowPriority.style.backgroundColor = new Color(0, 0, 0, 0.1f);
+			priorityListFoldout.Add(labelLowPriority);
+
+			// Reset list button
+			Button resetListButton = new(() =>
+			{
+				Undo.RecordObject(effectPresetReference.targetObject, "Reset state priorities.");
+				(effectPresetReference.targetObject as BaseVisualEffect).ResetStatePriorities();
+				EditorApplication.delayCall += () => statePriorityList.RefreshItems();
+			});
+			resetListButton.text = "Reset";
+			resetListButton.tooltip = "Reset the state priority list to the default order.";
+			resetListButton.style.position = Position.Absolute;
+			resetListButton.style.right = 0;
+			resetListButton.style.top = 0;
+			priorityListFoldout.Add(resetListButton);
+
+			// Deactivate on deselect toggle
+			Toggle deactivateOnDeselectToggle = new();
+			deactivateOnDeselectToggle.text = deactivateDeselectProp.displayName;
+			deactivateOnDeselectToggle.tooltip = BaseVisualEffect.TOOLTIP_DEACTIVATE_ON_DESELECT;
+			deactivateOnDeselectToggle.BindProperty(deactivateDeselectProp);
+			priorityListFoldout.Add(deactivateOnDeselectToggle);
+
+			// Add element to root container
+			container.Add(priorityListFoldout);
+
+			// Get serialized property iterator for all the other stuff
 			SerializedProperty iter = effectPresetReference.GetIterator();
+
 			if (iter.NextVisible(true)) // Access the first property
 			{
 				do
 				{
-					// Skip if property is the script
+					// Skip if property is the script reference
 					if (iter.name.Equals("m_Script", System.StringComparison.Ordinal))
 						continue;
-					// Manually style the state priority listview
+					// Skip state priority listview as it is handled separately
 					if (iter.name.Equals("statePriorities", System.StringComparison.Ordinal))
-					{
-						Foldout priorityListFoldout = new();
-						priorityListFoldout.text = iter.displayName;
-						priorityListFoldout.tooltip = BaseVisualEffect.TOOLTIP_STATE_PRIORITIES;
-						priorityListFoldout.style.marginLeft = 12;
-						priorityListFoldout.style.marginRight = 8;
-						priorityListFoldout.style.marginBottom = 4;
-						priorityListFoldout.contentContainer.style.marginLeft = 4;
-						priorityListFoldout.contentContainer.AddToClassList("hhui-border");
-						priorityListFoldout.viewDataKey = "PriorityListFoldout";
-
-						Label labelHighPriority = new("<b>Highest Priority</b>");
-						labelHighPriority.style.paddingTop = 4;
-						labelHighPriority.style.paddingBottom = 4;
-						labelHighPriority.style.unityTextAlign = TextAnchor.MiddleCenter;
-						labelHighPriority.style.backgroundColor = new Color(0, 0, 0, 0.1f);
-						priorityListFoldout.Add(labelHighPriority);
-
-						ListView statePriorityList = new();
-						statePriorityList.virtualizationMethod = CollectionVirtualizationMethod.DynamicHeight;
-						statePriorityList.reorderable = true;
-						statePriorityList.showAddRemoveFooter = false;
-						statePriorityList.reorderMode = ListViewReorderMode.Animated;
-						statePriorityList.showBoundCollectionSize = false;
-
-						statePriorityList.BindProperty(iter);
-						statePriorityList.Bind(effectPresetReference);
-
-						priorityListFoldout.Add(statePriorityList);
-
-						Label labelLowPriority = new("<b>Lowest Priority</b>");
-						labelLowPriority.style.paddingTop = 4;
-						labelLowPriority.style.paddingBottom = 4;
-						labelLowPriority.style.unityTextAlign = TextAnchor.MiddleCenter;
-						labelLowPriority.style.backgroundColor = new Color(0, 0, 0, 0.1f);
-						priorityListFoldout.Add(labelLowPriority);
-
-						// Add element to root container
-						container.Add(priorityListFoldout);
 						continue;
-					}
+					// Skip deactivate on deselect as it is handled separately
+					if (iter.name.Equals("deactivateOnDeselect", System.StringComparison.Ordinal))
+						continue;
 
 					// Create property fields for each visible field in the ScriptableObject
 					PropertyField nestedField = new(iter);
