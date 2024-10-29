@@ -2,17 +2,26 @@
 
 An convenient UI toolkit for multi-platform XR with examples and scripts to make our lives easier. Uses Unity's XRInteraction package and aims to provide the same convenience as MRTK.
 
-## How to Use
+## Installation
 
-In your unity package manager, install the following dependencies:
+### Dependencies
 
-- XR Interaction Toolkit
+- XR Interaction Toolkit 2.5.4 or higher
   - Starter Assets (under sample tab)
   - (optional) XR Device Simulator (under sample tab)
 
-Grab the latest package from the release page.
+### Add Package from Git URL
 
-Unzip the compressed package into your unity package folder.
+1. Install dependencies.
+2. In your Unity Package Manager click the '+' button and Add package from git URL.
+3. Git package URL: `https://github.com/seahyx/XR-UI-Toolkit.git?path=/Packages/com.seahyx.xruitoolkit`
+
+### Add Package from Disk
+
+1. Install dependencies.
+2. [Download](https://github.com/seahyx/XR-UI-Toolkit/releases) the latest zip package from the release page and extract it into a folder somewhere (e.g. Downloads).
+3. In your Unity Package Manager click the '+' button and **Add package from disk**.
+4. Navigate to the package folder you extracted and select the `package.json` file.
 
 ## Features
 
