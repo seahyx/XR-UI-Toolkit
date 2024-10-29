@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.seahyx.xruitoolkit": {
-      "version": "file:XRUIToolkit",
+      "version": "file:com.seahyx.xruitoolkit",
       "depth": 0,
       "source": "embedded",
       "dependencies": {
