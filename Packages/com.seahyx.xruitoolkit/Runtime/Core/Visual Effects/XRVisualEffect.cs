@@ -1,7 +1,5 @@
-using Codice.Client.Common.GameUI;
 using System.Text.RegularExpressions;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
 
 namespace XRUIToolkit.Core.VisualEffect
 {
