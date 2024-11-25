@@ -138,7 +138,7 @@ namespace XRUIToolkit.Core.VisualEffect
 				elapsedTime += Time.deltaTime; // Elapse time
 
 				float t = transitionCurve.Evaluate(elapsedTime / transitionDuration);
-				SetScale(Vector3.Lerp(initial, final, t));
+				SetScale(Vector3.LerpUnclamped(initial, final, t));
 
 				yield return null; // Wait next frame
 			}

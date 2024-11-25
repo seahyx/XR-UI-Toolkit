@@ -1,10 +1,11 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace XRUIToolkit.Core.VisualEffect
 {
-	[CreateAssetMenu(fileName = "ColourEffect", menuName = "HHUI Toolkit/Visual Effects/Colour Effect", order = 1)]
-	public class ColourVisualEffect : BaseAnimatedVisualEffect
+	[CreateAssetMenu(fileName = "ImageColourEffect", menuName = "HHUI Toolkit/Visual Effects/Image Colour Effect", order = 1)]
+	public class ImageColourVisualEffect : BaseAnimatedVisualEffect
 	{
 		protected enum ColourBlendMode
 		{
@@ -15,7 +16,7 @@ namespace XRUIToolkit.Core.VisualEffect
 		}
 
 		[SerializeField,
-			Tooltip("Colour blending mode between the original material colour and the visual effect colour.")]
+			Tooltip("Colour blending mode between the original image colour and the visual effect colour.")]
 		protected ColourBlendMode colourBlendMode = ColourBlendMode.Normal;
 
 		[SerializeField,
@@ -42,17 +43,17 @@ namespace XRUIToolkit.Core.VisualEffect
 			Tooltip(TOOLTIP_STATE_DISABLED)]
 		protected Color disabled = Color.white;
 
-		private Material _targetMaterial;
+		private Image _targetImage;
 
 		/// <summary>
 		/// Target material on the GameObject.
 		/// </summary>
-		protected Material TargetMaterial
+		protected Image TargetImage
 		{
-			get { return _targetMaterial; }
+			get { return _targetImage; }
 			set
 			{
-				_targetMaterial = value;
+				_targetImage = value;
 				initialColor = value.color;
 			}
 		}
@@ -66,17 +67,17 @@ namespace XRUIToolkit.Core.VisualEffect
 		{
 			base.Initialize(controller, target);
 
-			Renderer renderer;
-			if (target != null && target.TryGetComponent(out renderer))
-				TargetMaterial = renderer.material;
+			Image image;
+			if (target != null && target.TryGetComponent(out image))
+				TargetImage = image;
 		}
 
 		protected override bool CheckInitialization()
 		{
 			if (!base.CheckInitialization()) return false;
-			if (TargetMaterial == null)
+			if (TargetImage == null)
 			{
-				PrintInitWarning("Target GameObject does not have a vaild material. Effect is not yet initialized.");
+				PrintInitWarning("Target GameObject does not have a vaild UGUI Image. Effect is not yet initialized.");
 				return false;
 			}
 			return true;
@@ -92,37 +93,37 @@ namespace XRUIToolkit.Core.VisualEffect
 			{
 				case InteractableStates.Idle:
 					BeginTransitionCoroutine(TransitionAnimation(
-						TargetMaterial.color,
+						TargetImage.color,
 						BlendColours(initialColor, idle, colourBlendMode)));
 					break;
 
 				case InteractableStates.Hover:
 					BeginTransitionCoroutine(TransitionAnimation(
-						TargetMaterial.color,
+						TargetImage.color,
 						BlendColours(initialColor, hover, colourBlendMode)));
 					break;
 
 				case InteractableStates.Select:
 					BeginTransitionCoroutine(TransitionAnimation(
-						TargetMaterial.color,
+						TargetImage.color,
 						BlendColours(initialColor, selected, colourBlendMode)));
 					break;
 
 				case InteractableStates.Focus:
 					BeginTransitionCoroutine(TransitionAnimation(
-						TargetMaterial.color,
+						TargetImage.color,
 						BlendColours(initialColor, focused, colourBlendMode)));
 					break;
 
 				case InteractableStates.Activated:
 					BeginTransitionCoroutine(TransitionAnimation(
-						TargetMaterial.color,
+						TargetImage.color,
 						BlendColours(initialColor, activated, colourBlendMode)));
 					break;
 
 				case InteractableStates.Disabled:
 					BeginTransitionCoroutine(TransitionAnimation(
-						TargetMaterial.color,
+						TargetImage.color,
 						BlendColours(initialColor, disabled, colourBlendMode)));
 					break;
 			}
@@ -140,7 +141,7 @@ namespace XRUIToolkit.Core.VisualEffect
 				elapsedTime += Time.deltaTime;
 
 				t = transitionCurve.Evaluate(elapsedTime / transitionDuration);
-				SetColour(Color.Lerp(initial, final, t));
+				SetColour(Color.LerpUnclamped(initial, final, t));
 
 				yield return null; // Wait next frame
 			}
@@ -151,7 +152,7 @@ namespace XRUIToolkit.Core.VisualEffect
 
 		protected void SetColour(Color color)
 		{
-			TargetMaterial.color = color;
+			TargetImage.color = color;
 		}
 
 		protected static Color BlendColours(Color a, Color b, ColourBlendMode blendMode)

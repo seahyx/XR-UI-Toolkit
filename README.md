@@ -35,7 +35,9 @@ The default visual effects which are included in this library are:
 
 - Activate Visual Effect
 - Animation Trigger Visual Effect
-- Colour Visual Effect
+- Material Colour Visual Effect
+- Image Colour Visual Effect
+- Sprite Colour Visual Effect
 - Position Visual Effect
 - Rect Position Visual Effect
 - Rotation Visual Effect
