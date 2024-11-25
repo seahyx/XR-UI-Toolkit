@@ -37,8 +37,11 @@ The default visual effects which are included in this library are:
 - Animation Trigger Visual Effect
 - Colour Visual Effect
 - Position Visual Effect
+- Rect Position Visual Effect
 - Rotation Visual Effect
 - Scale Visual Effect
+- Text Visual Effect
+- Sprite Visual Effect
 
 New effects can be created to suit your project easily either by extending `BaseVisualEffect` or `BaseAnimatedVisualEffect`. For ease of development, it is recommended to use any the default visual effect (e.g. `ActivateVisualEffect`) as a template for creating a new effect.
 

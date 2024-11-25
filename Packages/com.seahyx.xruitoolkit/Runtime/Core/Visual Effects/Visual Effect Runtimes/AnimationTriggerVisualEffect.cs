@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace XRUIToolkit.Core.VisualEffect
 {
-	[CreateAssetMenu(fileName = "AnimationTriggerVisualEffect", menuName = "HHUI Toolkit/Visual Effects/Animation Trigger Effect", order = 0)]
+	[CreateAssetMenu(fileName = "AnimationTriggerVisualEffect", menuName = "HHUI Toolkit/Visual Effects/Animation Trigger Visual Effect", order = 0)]
 	public class AnimationTriggerVisualEffect : BaseVisualEffect
 	{
 		[SerializeField,
