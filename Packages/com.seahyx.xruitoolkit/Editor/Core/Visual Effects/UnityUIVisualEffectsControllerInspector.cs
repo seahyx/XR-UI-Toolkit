@@ -1,56 +1,23 @@
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using UnityEngine.XR.Interaction.Toolkit;
 
 namespace XRUIToolkit.Core.VisualEffect
 {
-	[CustomEditor(typeof(XRInteractableVisualEffectsController)), CanEditMultipleObjects]
-	public class XRInteractableVisualEffectsControllerInspector : Editor
+	[CustomEditor(typeof(UnityUIVisualEffectsController)), CanEditMultipleObjects]
+	public class UnityUIVisualEffectsControllerInspector : Editor
 	{
 		public override VisualElement CreateInspectorGUI()
 		{
 			// Create root UI element
 			VisualElement root = new();
 
-			// Get interactable property
-			SerializedProperty interactableProp = serializedObject.FindProperty("Interactable");
-			PropertyField interactableField = new(interactableProp);
-			root.Add(interactableField);
-
-			// Warning label group
-			VisualElement missingComponentWarningGroup = new();
-			HelpBox warningLabel = new("No XRBaseInteractable found on this GameObject. Add one to use as the interactable.", HelpBoxMessageType.Warning);
-			missingComponentWarningGroup.Add(warningLabel);
-			Button addInteractableButton = new(() =>
-			{
-				// Add XRBaseInteractable to each GameObject that does not have one
-				foreach (XRInteractableVisualEffectsController target in targets)
-				{
-					SerializedObject serTarget = new(target);
-					SerializedProperty serTargetInteractableProp = serTarget.FindProperty(interactableProp.propertyPath);
-					if (serTargetInteractableProp.objectReferenceValue == null && target.GetComponent<XRBaseInteractable>() == null)
-						Undo.AddComponent<XRSimpleInteractable>(target.gameObject);
-				}
-			});
-			addInteractableButton.text = "Add XRSimpleInteractable";
-			missingComponentWarningGroup.Add(addInteractableButton);
-			root.Add(missingComponentWarningGroup);
-
-			// Update warning label group visibility
-			missingComponentWarningGroup.style.display = ShowWarning(interactableProp) ? DisplayStyle.Flex : DisplayStyle.None;
-			interactableField.TrackPropertyValue(interactableProp, evt =>
-			{
-				missingComponentWarningGroup.style.display = ShowWarning(interactableProp) ? DisplayStyle.Flex : DisplayStyle.None;
-			});
-
 
 			// Show XR Visual Effects list
 
 			// Get list of visual effect components
-			XRInteractableVisualEffectsController controller = target as XRInteractableVisualEffectsController;
+			UnityUIVisualEffectsController controller = target as UnityUIVisualEffectsController;
 			List<XRVisualEffect> visualEffects = new(controller.GetComponents<XRVisualEffect>());
 
 			// Create MultiColumnListView
@@ -117,28 +84,6 @@ namespace XRUIToolkit.Core.VisualEffect
 			root.Add(addNewEffectButton);
 
 			return root;
-		}
-
-		/// <summary>
-		/// Checks whether to show the warning label.
-		/// </summary>
-		/// <param name="interactableProp"></param>
-		/// <param name="targets"></param>
-		/// <returns></returns>
-		private bool ShowWarning(SerializedProperty interactableProp)
-		{
-			bool showWarning = false;
-			foreach (XRInteractableVisualEffectsController target in targets)
-			{
-				SerializedObject serTarget = new(target);
-				SerializedProperty serTargetInteractableProp = serTarget.FindProperty(interactableProp.propertyPath);
-				if (serTargetInteractableProp.objectReferenceValue == null && target.GetComponent<XRBaseInteractable>() == null)
-				{
-					showWarning = true;
-					break;
-				}
-			}
-			return showWarning;
 		}
 
 		/// <summary>

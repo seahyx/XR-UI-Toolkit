@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -7,21 +6,33 @@ namespace XRUIToolkit.Core.VisualEffect
 	[AddComponentMenu("XR UI Toolkit/Visual Effects/XR Interactable Visual Effects Controller")]
 	public class XRInteractableVisualEffectsController : BaseVisualEffectsController
 	{
-		[SerializeField, Tooltip("XR Base Interactable reference. If none, will set to the Interactable on this gameObject.")]
+		[SerializeField, Tooltip("XR Base Interactable reference. If none, will set to the first Interactable on this gameObject if any.")]
 		public XRBaseInteractable Interactable;
 
 		protected override void BindEvents()
 		{
 			if (Interactable == null)
 				Interactable = GetComponent<XRBaseInteractable>();
-			if (Interactable == null)
+			if (Interactable != null)
 			{
-				enabled = false;
-				return;
+				// Clear any duplicate event bindings
+				UnbindEvents();
+				BindXRBaseInteractableEvents();
 			}
 
-			// Clear any duplicate event bindings
-			UnbindEvents();
+			enabled = false;
+			return;
+		}
+
+		protected override void UnbindEvents()
+		{
+			UnbindXRBaseInteractableEvents();
+		}
+
+		private void BindXRBaseInteractableEvents()
+		{
+			if (Interactable == null)
+				return;
 
 			Interactable.firstHoverEntered.AddListener((e) => FirstHoverEntered.Invoke());
 			Interactable.lastHoverExited.AddListener((e) => LastHoverExited.Invoke());
@@ -33,7 +44,7 @@ namespace XRUIToolkit.Core.VisualEffect
 			Interactable.deactivated.AddListener((e) => Deactivated.Invoke());
 		}
 
-		protected override void UnbindEvents()
+		private void UnbindXRBaseInteractableEvents()
 		{
 			if (Interactable == null)
 				return;

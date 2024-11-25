@@ -27,7 +27,9 @@ An convenient UI toolkit for multi-platform XR with examples and scripts to make
 
 ### Interactable Visual Effects
 
-Similar to MRTK Interactable's profile system, XR UI Toolkit adds various XR Visual Effects that exist as individual components, taking on various effect presets that will apply visual changes based on currently active interactable states on GameObjects. An XR Visual Effects Controller allows the visual effects to make use of the various callbacks on XRI's BaseInteractable components and make it easy to manage the visual effects, and can be extended to fit other interaction systems.
+Similar to MRTK Interactable's profile system, XR UI Toolkit adds various XR Visual Effects that exist as individual components, taking on various effect presets that will apply visual changes based on currently active interactable states on GameObjects. A XR Visual Effects Controller allows the visual effects to make use of the various callbacks on XRI's BaseInteractable components and make it easy to manage the visual effects, and can be extended to fit other interaction systems.
+
+There is also a controller that works with Unity UI components as well.
 
 The default visual effects which are included in this library are:
 
