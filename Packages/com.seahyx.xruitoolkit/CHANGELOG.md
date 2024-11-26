@@ -5,14 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.4.1
+
+### Added
+
+- `UnityUIVisualEffectsController` now detects for Toggle components and uses the Activated visual effect state to represent the toggle "on" state.
+
 ## 1.4.0
 
-## Added
+### Added
 
 - Added new `ImageColourVisualEffect`
 - Added new `SpriteColourVisualEffect`
 
-## Changed
+### Changed
 
 - Changed all interpolation methods to unclamped
 - Renamed `ColourVisualEffect` to `MaterialColourVisualEffect`

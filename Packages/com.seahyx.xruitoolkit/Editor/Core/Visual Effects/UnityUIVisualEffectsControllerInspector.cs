@@ -14,6 +14,12 @@ namespace XRUIToolkit.Core.VisualEffect
 			VisualElement root = new();
 
 
+			// Helpbox for if toggle is detected, use Activated state
+			HelpBox toggleInfo = new("A Toggle is found on this GameObject. The Activated state will represent the \"on\" state of the Toggle, and the Idle state will represent the \"off\" state.", HelpBoxMessageType.Info);
+			toggleInfo.style.display = ShowInfo() ? DisplayStyle.Flex : DisplayStyle.None;
+			root.Add(toggleInfo);
+
+
 			// Show XR Visual Effects list
 
 			// Get list of visual effect components
@@ -84,6 +90,15 @@ namespace XRUIToolkit.Core.VisualEffect
 			root.Add(addNewEffectButton);
 
 			return root;
+		}
+
+		/// <summary>
+		/// Checks whether to show the toggle info helpbox.
+		/// </summary>
+		/// <returns></returns>
+		private bool ShowInfo()
+		{
+			return (target as UnityUIVisualEffectsController).GetComponent<UnityEngine.UI.Toggle>() != null;
 		}
 
 		/// <summary>

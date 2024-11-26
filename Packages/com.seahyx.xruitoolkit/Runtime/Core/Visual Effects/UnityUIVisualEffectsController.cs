@@ -7,14 +7,40 @@ namespace XRUIToolkit.Core.VisualEffect
 	[AddComponentMenu("XR UI Toolkit/Visual Effects/Unity UI Visual Effects Controller")]
 	public class UnityUIVisualEffectsController : BaseVisualEffectsController, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler, ISelectHandler, IDeselectHandler, IEventSystemHandler
 	{
+		private Toggle toggle;
+
 		protected override void BindEvents()
 		{
-			return;
+			// If there is a toggle component on this GameObject, bind to it
+			toggle = GetComponent<Toggle>();
+			if (toggle != null)
+			{
+				// Clear any duplicate event bindings
+				UnbindEvents();
+
+				BindToggleEvents();
+			}
 		}
 
 		protected override void UnbindEvents()
 		{
-			return;
+			UnbindToggleEvents();
+		}
+
+		private void BindToggleEvents()
+		{
+			if (toggle == null)
+				return;
+
+			toggle.onValueChanged.AddListener(OnToggleValueChanged);
+		}
+
+		private void UnbindToggleEvents()
+		{
+			if (toggle == null)
+				return;
+
+			toggle.onValueChanged.RemoveListener(OnToggleValueChanged);
 		}
 
 		public void OnPointerEnter(PointerEventData eventData)
@@ -45,6 +71,14 @@ namespace XRUIToolkit.Core.VisualEffect
 		public void OnDeselect(BaseEventData eventData)
 		{
 			LastFocusExited.Invoke();
+		}
+
+		private void OnToggleValueChanged(bool value)
+		{
+			if (value)
+				Activated.Invoke();
+			else
+				Deactivated.Invoke();
 		}
 	}
 }
