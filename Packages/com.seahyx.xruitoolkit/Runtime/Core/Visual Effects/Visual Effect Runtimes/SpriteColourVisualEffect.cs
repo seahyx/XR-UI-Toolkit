@@ -3,7 +3,8 @@ using UnityEngine;
 
 namespace XRUIToolkit.Core.VisualEffect
 {
-	[CreateAssetMenu(fileName = "SpriteColourVFX", menuName = "HHUI Toolkit/Visual Effects/Sprite Colour VFX", order = 1)]
+	[CreateAssetMenu(fileName = "SpriteColourVFX", menuName = "HHUI Toolkit/Visual Effects/Colour/Sprite Colour VFX", order = 1)]
+	[DropdownMenuName("Colour/Sprite Colour VFX")]
 	public class SpriteColourVisualEffect : BaseAnimatedVisualEffect
 	{
 		protected enum ColourBlendMode

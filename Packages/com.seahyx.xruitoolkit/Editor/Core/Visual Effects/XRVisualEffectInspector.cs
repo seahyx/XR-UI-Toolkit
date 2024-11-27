@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
@@ -12,6 +13,8 @@ namespace XRUIToolkit.Core.VisualEffect
 	[CustomEditor(typeof(XRVisualEffect), true)]
 	public class XRVisualEffectInspector : Editor
 	{
+		private const string ASSET_FOLDER_PATH = "Assets/XRUI/Visual Effects";
+
 		public override VisualElement CreateInspectorGUI()
 		{
 			// Create root UI element
@@ -105,7 +108,7 @@ namespace XRUIToolkit.Core.VisualEffect
 		private void DisplayCreateEffectAssetMenu(VisualElement anchor, SerializedProperty effectProp)
 		{
 			// Create dropdown menu
-			GenericDropdownMenu menu = new();
+			GenericMenu menu = new();
 
 			// Get all usable visual effect classes using reflection
 			Type baseType = typeof(BaseVisualEffect);
@@ -116,22 +119,28 @@ namespace XRUIToolkit.Core.VisualEffect
 							!t.IsInterface &&
 							t.IsSubclassOf(baseType)))
 			{
+				string menuName = derivedType.Name;
+				string filename = derivedType.Name;
+				var dropdownNameAttr = derivedType.GetCustomAttribute<DropdownMenuNameAttribute>();
+				if (dropdownNameAttr != null)
+					menuName = dropdownNameAttr.MenuName;
+				var assetMenuAttr = derivedType.GetCustomAttribute<CreateAssetMenuAttribute>();
+				if (assetMenuAttr != null)
+					filename = assetMenuAttr.fileName;
+
 				effectTypeList.Add(derivedType);
-				menu.AddItem(derivedType.Name, false, () =>
+				menu.AddItem(new GUIContent(menuName), false, () =>
 				{
 					// Create default folders if doesn't exist
-					if (!AssetDatabase.IsValidFolder("Assets/XRUI"))
-						AssetDatabase.CreateFolder("Assets", "XRUI");
-					if (!AssetDatabase.IsValidFolder("Assets/XRUI/Visual Effects"))
-						AssetDatabase.CreateFolder("Assets/XRUI", "Visual Effects");
+					Directory.CreateDirectory(ASSET_FOLDER_PATH);
 
 					// Create effect asset
 					string path = EditorUtility.SaveFilePanelInProject(
 						"Create New Visual Effect",
-						derivedType.Name,
+						filename,
 						"asset",
 						"Create a name and select a location for this visual effect",
-						"Assets/XRUI/Visual Effects");
+						ASSET_FOLDER_PATH);
 					if (path != "")
 					{
 						ScriptableObject instance = ScriptableObject.CreateInstance(derivedType);
@@ -143,7 +152,7 @@ namespace XRUIToolkit.Core.VisualEffect
 				});
 			}
 
-			menu.DropDown(anchor.worldBound, anchor);
+			menu.ShowAsContext();
 		}
 	}
 }

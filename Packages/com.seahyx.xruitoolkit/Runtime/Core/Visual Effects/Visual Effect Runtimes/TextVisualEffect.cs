@@ -3,7 +3,8 @@ using UnityEngine;
 
 namespace XRUIToolkit.Core.VisualEffect
 {
-	[CreateAssetMenu(fileName = "TextVFX", menuName = "HHUI Toolkit/Visual Effects/Text VFX", order = 0)]
+	[CreateAssetMenu(fileName = "TextVFX", menuName = "HHUI Toolkit/Visual Effects/UI/Text VFX", order = 0)]
+	[DropdownMenuName("UI/Text VFX")]
 	public class TextVisualEffect : BaseVisualEffect
 	{
 		[SerializeField,

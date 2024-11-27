@@ -605,6 +605,7 @@ GameObject:
   - component: {fileID: 392096527}
   - component: {fileID: 392096526}
   - component: {fileID: 392096525}
+  - component: {fileID: 392096528}
   m_Layer: 0
   m_Name: XR UI Toolkit Demo Object
   m_TagString: Untagged
@@ -809,6 +810,21 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   Interactable: {fileID: 0}
+--- !u!114 &392096528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 392096518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81293b229a1ddf744bf4610ee9dd51ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isEnabled: 1
+  Target: {fileID: 0}
+  Effect: {fileID: 0}
 --- !u!1 &421848383
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,7 +3,8 @@ using UnityEngine.UI;
 
 namespace XRUIToolkit.Core.VisualEffect
 {
-	[CreateAssetMenu(fileName = "SpriteImageSwapVFX", menuName = "HHUI Toolkit/Visual Effects/Sprite or Image Swap VFX", order = 0)]
+	[CreateAssetMenu(fileName = "SpriteImageSwapVFX", menuName = "HHUI Toolkit/Visual Effects/UI/Sprite or Image Swap VFX", order = 0)]
+	[DropdownMenuName("UI/Sprite or Image Swap VFX")]
 	public class SpriteImageSwapVisualEffect : BaseVisualEffect
 	{
 		[SerializeField,

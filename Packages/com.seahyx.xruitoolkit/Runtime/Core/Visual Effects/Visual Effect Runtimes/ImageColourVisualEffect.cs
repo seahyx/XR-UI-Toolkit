@@ -4,7 +4,8 @@ using UnityEngine.UI;
 
 namespace XRUIToolkit.Core.VisualEffect
 {
-	[CreateAssetMenu(fileName = "ImageColourVFX", menuName = "HHUI Toolkit/Visual Effects/Image Colour VFX", order = 1)]
+	[CreateAssetMenu(fileName = "ImageColourVFX", menuName = "HHUI Toolkit/Visual Effects/Colour/Image Colour VFX", order = 1)]
+	[DropdownMenuName("Colour/Image Colour VFX")]
 	public class ImageColourVisualEffect : BaseAnimatedVisualEffect
 	{
 		protected enum ColourBlendMode

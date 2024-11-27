@@ -3,7 +3,8 @@ using UnityEngine;
 
 namespace XRUIToolkit.Core.VisualEffect
 {
-	[CreateAssetMenu(fileName = "RotationVFX", menuName = "HHUI Toolkit/Visual Effects/Rotation VFX", order = 3)]
+	[CreateAssetMenu(fileName = "RotationVFX", menuName = "HHUI Toolkit/Visual Effects/Transform/Rotation VFX", order = 3)]
+	[DropdownMenuName("Transform/Rotation VFX")]
 	public class RotationVisualEffect : BaseAnimatedVisualEffect
 	{
 		protected enum TransformMode
