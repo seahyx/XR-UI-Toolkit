@@ -5,11 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.5.0
+
+### Added
+
+- `SpriteImageColourVisualEffect` that can change colour on both SpriteRenderer or UGUI Image component on the target
+- `ImageSwapVisualEffect` that can change swap sprites on a UGUI Image component on the target
+- `SpriteImageSwapVisualEffect` that can change swap sprites on both SpriteRenderer or UGUI Image component on the target
+
+### Changed
+
+- Renamed `SpriteVisualEffect` to `SpriteSwapVisualEffect`
+- Refactored all "Visual Effect" strings to "VFX" in asset creation menu and filenames during creation for brevity
+- Updated package links
+
 ## 1.4.1
 
 ### Added
 
-- `UnityUIVisualEffectsController` now detects for Toggle components and uses the Activated visual effect state to represent the toggle "on" state.
+- `UnityUIVisualEffectsController` now detects for Toggle components and uses the Activated visual effect state to represent the toggle "on" state
 
 ## 1.4.0
 
@@ -35,7 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Support for Visual Effects on UGUI elements via `UnityUIVisualEffectsController`.
+- Support for Visual Effects on UGUI elements via `UnityUIVisualEffectsController`
 
 ## 1.1.1
 

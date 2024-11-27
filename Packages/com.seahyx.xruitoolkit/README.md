@@ -33,17 +33,24 @@ There is also a controller that works with Unity UI components as well.
 
 The default visual effects which are included in this library are:
 
-- Activate Visual Effect
-- Animation Trigger Visual Effect
-- Material Colour Visual Effect
-- Image Colour Visual Effect
-- Sprite Colour Visual Effect
-- Position Visual Effect
-- Rect Position Visual Effect
-- Rotation Visual Effect
-- Scale Visual Effect
-- Text Visual Effect
-- Sprite Visual Effect
+- General:
+  - Activate Visual Effect
+  - Animation Trigger Visual Effect
+- Colour:
+  - Material Colour Visual Effect
+  - Image Colour Visual Effect
+  - Sprite Colour Visual Effect
+  - Sprite/Image Colour Visual Effect
+- Transform:
+  - Position Visual Effect
+  - Rect Position Visual Effect
+  - Rotation Visual Effect
+  - Scale Visual Effect
+- UI:
+  - Text Visual Effect
+  - Image Swap Visual Effect
+  - Sprite Swap Visual Effect
+  - Sprite/Image Swap Visual Effect
 
 New effects can be created to suit your project easily either by extending `BaseVisualEffect` or `BaseAnimatedVisualEffect`. For ease of development, it is recommended to use any the default visual effect (e.g. `ActivateVisualEffect`) as a template for creating a new effect.
 

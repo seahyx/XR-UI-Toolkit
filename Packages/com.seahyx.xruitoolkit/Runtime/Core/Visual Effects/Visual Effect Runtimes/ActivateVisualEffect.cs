@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace XRUIToolkit.Core.VisualEffect
 {
-	[CreateAssetMenu(fileName = "ActivateEffect", menuName = "HHUI Toolkit/Visual Effects/Activate Effect", order = 0)]
+	[CreateAssetMenu(fileName = "ActivateVFX", menuName = "HHUI Toolkit/Visual Effects/Activate VFX", order = 0)]
 	public class ActivateVisualEffect : BaseVisualEffect
 	{
 		[SerializeField,

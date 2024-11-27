@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace XRUIToolkit.Core.VisualEffect
 {
-	[CreateAssetMenu(fileName = "PositionEffect", menuName = "HHUI Toolkit/Visual Effects/Position Effect", order = 2)]
+	[CreateAssetMenu(fileName = "PositionVFX", menuName = "HHUI Toolkit/Visual Effects/Position VFX", order = 2)]
 	public class PositionVisualEffect : BaseAnimatedVisualEffect
 	{
 		protected enum TransformMode

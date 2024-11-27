@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace XRUIToolkit.Core.VisualEffect
 {
-	[CreateAssetMenu(fileName = "ScaleEffect", menuName = "HHUI Toolkit/Visual Effects/Scale Effect", order = 2)]
+	[CreateAssetMenu(fileName = "ScaleVFX", menuName = "HHUI Toolkit/Visual Effects/Scale VFX", order = 2)]
 	public class ScaleVisualEffect : BaseAnimatedVisualEffect
 	{
 		protected enum TransformMode

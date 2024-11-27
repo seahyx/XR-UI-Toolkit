@@ -1,10 +1,11 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace XRUIToolkit.Core.VisualEffect
 {
-	[CreateAssetMenu(fileName = "SpriteColourVFX", menuName = "HHUI Toolkit/Visual Effects/Sprite Colour VFX", order = 1)]
-	public class SpriteColourVisualEffect : BaseAnimatedVisualEffect
+	[CreateAssetMenu(fileName = "SpriteImageColVFX", menuName = "HHUI Toolkit/Visual Effects/Sprite or Image Colour VFX", order = 1)]
+	public class SpriteImageColourVisualEffect : BaseAnimatedVisualEffect
 	{
 		protected enum ColourBlendMode
 		{
@@ -15,7 +16,7 @@ namespace XRUIToolkit.Core.VisualEffect
 		}
 
 		[SerializeField,
-			Tooltip("Colour blending mode between the original sprite colour and the visual effect colour.")]
+			Tooltip("Colour blending mode between the original image colour and the visual effect colour.")]
 		protected ColourBlendMode colourBlendMode = ColourBlendMode.Normal;
 
 		[SerializeField,
@@ -41,6 +42,21 @@ namespace XRUIToolkit.Core.VisualEffect
 		[SerializeField,
 			Tooltip(TOOLTIP_STATE_DISABLED)]
 		protected Color disabled = Color.white;
+
+		private Image _targetImage;
+
+		/// <summary>
+		/// Target material on the GameObject.
+		/// </summary>
+		protected Image TargetImage
+		{
+			get { return _targetImage; }
+			set
+			{
+				_targetImage = value;
+				initialColor = value.color;
+			}
+		}
 
 		private SpriteRenderer _targetSprite;
 
@@ -69,14 +85,17 @@ namespace XRUIToolkit.Core.VisualEffect
 			SpriteRenderer renderer;
 			if (target != null && target.TryGetComponent(out renderer))
 				TargetSprite = renderer;
+			Image image;
+			if (target != null && target.TryGetComponent(out image))
+				TargetImage = image;
 		}
 
 		protected override bool CheckInitialization()
 		{
 			if (!base.CheckInitialization()) return false;
-			if (TargetSprite == null)
+			if (TargetSprite == null && TargetImage == null)
 			{
-				PrintInitWarning("Target GameObject does not have a vaild Sprite Renderer. Effect is not yet initialized.");
+				PrintInitWarning("Target GameObject does not have a vaild Sprite Renderer or UGUI Image. Effect is not yet initialized.");
 				return false;
 			}
 			return true;
@@ -92,37 +111,37 @@ namespace XRUIToolkit.Core.VisualEffect
 			{
 				case InteractableStates.Idle:
 					BeginTransitionCoroutine(TransitionAnimation(
-						TargetSprite.color,
+						TargetImage.color,
 						BlendColours(initialColor, idle, colourBlendMode)));
 					break;
 
 				case InteractableStates.Hover:
 					BeginTransitionCoroutine(TransitionAnimation(
-						TargetSprite.color,
+						TargetImage.color,
 						BlendColours(initialColor, hover, colourBlendMode)));
 					break;
 
 				case InteractableStates.Select:
 					BeginTransitionCoroutine(TransitionAnimation(
-						TargetSprite.color,
+						TargetImage.color,
 						BlendColours(initialColor, selected, colourBlendMode)));
 					break;
 
 				case InteractableStates.Focus:
 					BeginTransitionCoroutine(TransitionAnimation(
-						TargetSprite.color,
+						TargetImage.color,
 						BlendColours(initialColor, focused, colourBlendMode)));
 					break;
 
 				case InteractableStates.Activated:
 					BeginTransitionCoroutine(TransitionAnimation(
-						TargetSprite.color,
+						TargetImage.color,
 						BlendColours(initialColor, activated, colourBlendMode)));
 					break;
 
 				case InteractableStates.Disabled:
 					BeginTransitionCoroutine(TransitionAnimation(
-						TargetSprite.color,
+						TargetImage.color,
 						BlendColours(initialColor, disabled, colourBlendMode)));
 					break;
 			}
@@ -151,7 +170,10 @@ namespace XRUIToolkit.Core.VisualEffect
 
 		protected void SetColour(Color color)
 		{
-			TargetSprite.color = color;
+			if (TargetSprite != null)
+				TargetSprite.color = color;
+			if (TargetImage != null)
+				TargetImage.color = color;
 		}
 
 		protected static Color BlendColours(Color a, Color b, ColourBlendMode blendMode)

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace XRUIToolkit.Core.VisualEffect
 {
-	[CreateAssetMenu(fileName = "MaterialColourEffect", menuName = "HHUI Toolkit/Visual Effects/Material Colour Effect", order = 1)]
+	[CreateAssetMenu(fileName = "MaterialColourVFX", menuName = "HHUI Toolkit/Visual Effects/Material Colour VFX", order = 1)]
 	public class MaterialColourVisualEffect : BaseAnimatedVisualEffect
 	{
 		protected enum ColourBlendMode

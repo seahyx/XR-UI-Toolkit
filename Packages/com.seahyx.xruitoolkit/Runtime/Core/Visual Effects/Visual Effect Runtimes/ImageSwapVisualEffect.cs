@@ -1,9 +1,10 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace XRUIToolkit.Core.VisualEffect
 {
-	[CreateAssetMenu(fileName = "SpriteVisualEffect", menuName = "HHUI Toolkit/Visual Effects/Sprite Visual Effect", order = 0)]
-	public class SpriteVisualEffect : BaseVisualEffect
+	[CreateAssetMenu(fileName = "ImageSwapVFX", menuName = "HHUI Toolkit/Visual Effects/Image Swap VFX", order = 0)]
+	public class ImageSwapVisualEffect : BaseVisualEffect
 	{
 		[SerializeField,
 			Tooltip("Sprite to be set when entering the idle state.")]
@@ -29,25 +30,23 @@ namespace XRUIToolkit.Core.VisualEffect
 			Tooltip("Sprite to be set when entering the disabled state.")]
 		private Sprite disabled;
 
-		private SpriteRenderer targetSpriteRenderer;
+		private Image targetImage;
 
 		public override void Initialize(BaseVisualEffectsController controller, GameObject target)
 		{
 			base.Initialize(controller, target);
 
-			SpriteRenderer tmp;
+			Image tmp;
 			if (target != null && target.TryGetComponent(out tmp))
-			{
-				targetSpriteRenderer = tmp;
-			}
+				targetImage = tmp;
 		}
 
 		protected override bool CheckInitialization()
 		{
 			if (!base.CheckInitialization()) return false;
-			if (targetSpriteRenderer == null)
+			if (targetImage == null)
 			{
-				PrintInitWarning("Target GameObject does not have a vaild Sprite Renderer. Effect is not yet initialized.");
+				PrintInitWarning("Target GameObject does not have a vaild UGUI Image. Effect is not yet initialized.");
 				return false;
 			}
 			return true;
@@ -62,24 +61,29 @@ namespace XRUIToolkit.Core.VisualEffect
 			switch(currentState)
 			{
 				case InteractableStates.Idle:
-					targetSpriteRenderer.sprite = idle;
+					SetSprite(idle);
 					break;
 				case InteractableStates.Hover:
-					targetSpriteRenderer.sprite = hover;
+					SetSprite(hover);
 					break;
 				case InteractableStates.Select:
-					targetSpriteRenderer.sprite = selected;
+					SetSprite(selected);
 					break;
 				case InteractableStates.Focus:
-					targetSpriteRenderer.sprite = focused;
+					SetSprite(focused);
 					break;
 				case InteractableStates.Activated:
-					targetSpriteRenderer.sprite = activated;
+					SetSprite(activated);
 					break;
 				case InteractableStates.Disabled:
-					targetSpriteRenderer.sprite = disabled;
+					SetSprite(disabled);
 					break;
 			}
+		}
+
+		protected void SetSprite(Sprite sprite)
+		{
+			targetImage.sprite = sprite;
 		}
 	}
 }
