@@ -51,6 +51,8 @@ The default visual effects which are included in this library are:
   - Image Swap Visual Effect
   - Sprite Swap Visual Effect
   - Sprite/Image Swap Visual Effect
+- Audio:
+  - Audio Clip Visual Effect
 
 New effects can be created to suit your project easily either by extending `BaseVisualEffect` or `BaseAnimatedVisualEffect`. For ease of development, it is recommended to use any the default visual effect (e.g. `ActivateVisualEffect`) as a template for creating a new effect.
 
