@@ -32,6 +32,7 @@ namespace XRUIToolkit.Core.VisualEffect
 		private string disabled = "";
 
 		private TextMeshPro targetTMP;
+		private TextMeshProUGUI targetTMPUGUI;
 
 		private string initialText = "";
 
@@ -39,10 +40,13 @@ namespace XRUIToolkit.Core.VisualEffect
 		{
 			base.Initialize(controller, target);
 
-			TextMeshPro tmp;
-			if (target != null && target.TryGetComponent(out tmp))
+			if (target != null && target.TryGetComponent(out TextMeshPro tmp))
 			{
 				targetTMP = tmp;
+				initialText = targetTMP.text;
+			} else if (target != null && target.TryGetComponent(out TextMeshProUGUI tmpugui))
+			{
+				targetTMPUGUI = tmpugui;
 				initialText = targetTMP.text;
 			}
 		}
@@ -50,9 +54,9 @@ namespace XRUIToolkit.Core.VisualEffect
 		protected override bool CheckInitialization()
 		{
 			if (!base.CheckInitialization()) return false;
-			if (targetTMP == null)
+			if (targetTMP == null && targetTMPUGUI == null)
 			{
-				PrintInitWarning("Target GameObject does not have a vaild Text Mesh Pro. Effect is not yet initialized.");
+				PrintInitWarning("Target GameObject does not have a vaild TextMeshPro or TextMeshProUGUI. Effect is not yet initialized.");
 				return false;
 			}
 			return true;
@@ -67,24 +71,29 @@ namespace XRUIToolkit.Core.VisualEffect
 			switch(currentState)
 			{
 				case InteractableStates.Idle:
-					targetTMP.text = idle != "" ? idle : initialText;
+					SetText(idle != "" ? idle : initialText);
 					break;
 				case InteractableStates.Hover:
-					targetTMP.text = hover != "" ? hover : initialText;
+					SetText(hover != "" ? hover : initialText);
 					break;
 				case InteractableStates.Select:
-					targetTMP.text = selected != "" ? selected : initialText;
+					SetText(selected != "" ? selected : initialText);
 					break;
 				case InteractableStates.Focus:
-					targetTMP.text = focused != "" ? focused : initialText;
+					SetText(focused != "" ? focused : initialText);
 					break;
 				case InteractableStates.Activated:
-					targetTMP.text = activated != "" ? activated : initialText;
+					SetText(activated != "" ? activated : initialText);
 					break;
 				case InteractableStates.Disabled:
-					targetTMP.text = disabled != "" ? disabled : initialText;
+					SetText(disabled != "" ? disabled : initialText);
 					break;
 			}
+		}
+
+		protected void SetText(string text) {
+			if (targetTMP != null) targetTMP.text = text;
+			if (targetTMPUGUI != null) targetTMPUGUI.text = text;
 		}
 	}
 }
