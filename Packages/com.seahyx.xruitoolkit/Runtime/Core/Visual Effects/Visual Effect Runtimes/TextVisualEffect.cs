@@ -47,7 +47,7 @@ namespace XRUIToolkit.Core.VisualEffect
 			} else if (target != null && target.TryGetComponent(out TextMeshProUGUI tmpugui))
 			{
 				targetTMPUGUI = tmpugui;
-				initialText = targetTMP.text;
+				initialText = targetTMPUGUI.text;
 			}
 		}
 
